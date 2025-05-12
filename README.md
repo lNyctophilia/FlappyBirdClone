@@ -1,0 +1,61 @@
+# 🎮 Flappy Bird! Clone With Unity
+
+📸 Screenshots
+
+![Screenshots](https://github.com/user-attachments/assets/5c83b39d-fa60-443c-ac43-2d71e202e01c)
+
+
+🎯 Objective
+
+    Tap the screen to make the bird flap its wings and navigate through pipes without crashing. Collect points for every pipe you pass, and aim for your highest score!
+
+
+📱 Compatibility
+
+    Android Versions: Fully supported on Android 5.1 (Lollipop) to Android 13 (Tiramisu).
+
+    Devices: Optimized for both phones and tablets.
+
+🚨 Important Notes
+
+    Educational Project: This game was developed solely for educational purposes to demonstrate core game development concepts using Unity.
+
+    Legal Disclaimer:
+
+        This project is a non-commercial fan recreation inspired by "Flappy Bird."
+
+        Commercial use, redistribution, or monetization is strictly prohibited and may violate copyright laws.
+
+        All assets (art, sound) are either original or used under proper licensing for educational demonstration.
+
+🛠️ Technical Details
+
+    Engine: Built with Unity 2022.3.13f1
+
+    Language: C#
+
+    Third-Party Tools: LeanTween (animations)
+
+📥 Download & Installation
+
+    Download the latest APK from the Releases section.
+
+    Install on your Android device.
+
+🎮 Controls
+
+    Tap anywhere on the screen: Make the bird jump.
+
+
+📜 License
+
+    Code: MIT License.
+
+    Art/Sound: Educational use only.
+
+⚠️ Warning
+This project is NOT affiliated with the original "Flappy Bird" and is intended purely for learning purposes.
+
+🙏 Credits
+
+    Inspired by the original "Flappy Bird" by DotGears.
