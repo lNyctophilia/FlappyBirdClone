@@ -1,27 +1,40 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class ButtonPress : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    Button button;
-    float buttonHeight;
+    [Header("References")]
+    private Button button;
 
-    void Start()
+
+    [Header("Settings")]
+    [SerializeField] private float _buttonPressedHeightDistance = 18f;
+    [SerializeField] private float _duration = 0.05f;
+    [SerializeField] private bool isMuted;
+    private float _buttonHeight;
+
+
+    // ----- SYSTEM -----
+    public static event Action OnButtonPressed;
+
+
+    private void Start()
     {
         button = GetComponent<Button>();
-        buttonHeight = button.GetComponent<RectTransform>().localPosition.y;
+        _buttonHeight = button.GetComponent<RectTransform>().localPosition.y;
     }
 
-    // IPointerDownHandler arayüz metodunu implement ediyoruz
+
     public void OnPointerDown(PointerEventData eventData) => Pressed();
     public void OnPointerUp(PointerEventData eventData) => UnPressed();
 
-    void Pressed()
+    private void Pressed()
     {
-        Audio.Instance.PlayVoice("Click");
-        LeanTween.moveLocalY(button.gameObject, buttonHeight - 18f, 0.05f);
+        LeanTween.moveLocalY(button.gameObject, _buttonHeight - _buttonPressedHeightDistance, _duration);
+        if(!isMuted) OnButtonPressed?.Invoke();
     }
-    void UnPressed() => LeanTween.moveLocalY(button.gameObject, buttonHeight, 0.05f);
+    private void UnPressed() => LeanTween.moveLocalY(button.gameObject, _buttonHeight, _duration);
 }
 

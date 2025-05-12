@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Gereksizler/Scenes/FlappyBird.unity
+    path: Assets/7.Scenes/FlappyBird.unity
     guid: 6c52a932af0883c4abdd4cd6b36b0a25
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 4a76efaf58c56ad4aa00cc8714134e8c, type: 2}

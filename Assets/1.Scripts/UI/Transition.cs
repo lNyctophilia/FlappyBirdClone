@@ -1,50 +1,82 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Transition : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private Image _blackImage;
+    [SerializeField] private Image _flashImage;
+    
+
+    [Header("Settings")]
+    [SerializeField] private float _fadeDuration = 0.3f;
+    [SerializeField] private float _flashDuration = 0.1f;
+    public float FadeDuration => _fadeDuration;
+
+
+    [Header("System")]
     public static Transition Instance;
-    public GameObject FadeBlack, FadeWhite;
-    public bool isTransition;
+    public static event Action OnFadeTransition;
+    public static event Action OnFadeTransitionFinished;
+
+
     private void Awake()
     {
         Instance = this;
-        FadeBlack.SetActive(false);
-        FadeWhite.SetActive(false);
+        _blackImage.gameObject.SetActive(false);
+        _flashImage.gameObject.SetActive(false);
+
+        GameManager.OnGameStateChanged += Fade;
+        GameManager.OnGameStateChanged += Flash;
     }
-    public void FadeOutBlack()
+    private void OnDestroy()
     {
-        if (isTransition) return;
-        Audio.Instance.PlayVoice("Starting");
-        FadeBlack.SetActive(true);
-        isTransition = true;
-        FadeBlack.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
-        LeanTween.alpha(FadeBlack, 1, 0.3f).setOnComplete(FadeInBlack);
+        GameManager.OnGameStateChanged -= Fade;
+        GameManager.OnGameStateChanged -= Flash;
     }
-    void FadeInBlack()
+
+
+    public void Fade(GameState _currentState)
     {
-        if (!BirdDeath.Instance.isDeath) UIManager.Instance.OpenStartingMenu();
-        else
+        if (_currentState == GameState.Pause || _currentState == GameState.Ending || _currentState == GameState.Playing) return;
+
+        _blackImage.gameObject.SetActive(true);
+        _blackImage.color = new Color(0, 0, 0, 0);
+        LeanTween.cancel(_blackImage.gameObject);
+        LeanTween.alpha(_blackImage.rectTransform, 1, _fadeDuration).setOnComplete(() => {
+            LeanTween.alpha(_blackImage.rectTransform, 0, _fadeDuration).setOnComplete(() => { _blackImage.gameObject.SetActive(false); }).setDelay(0.1f);
+            OnFadeTransitionFinished?.Invoke();
+        });
+
+        OnFadeTransition?.Invoke();
+    }
+    public void Flash(GameState _currentState)
+    {
+        if(_currentState != GameState.Ending) return;
+
+        _flashImage.gameObject.SetActive(true);
+        _flashImage.color = new Color(1, 1, 1, 0);
+        LeanTween.cancel(_flashImage.gameObject);
+        LeanTween.alpha(_flashImage.rectTransform, 1, _flashDuration).setOnComplete(() => {
+            LeanTween.alpha(_flashImage.rectTransform, 0, _flashDuration * 3).setOnComplete(() => { _flashImage.gameObject.SetActive(false); });
+        });
+    }
+
+
+    #region ----- TESTING -----
+/*
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            UIManager.Instance.OpenMainMenu();
-            BirdDeath.Instance.Respawn();
-            Spawner.Instance.DestroyPipe();
+            Fade();
         }
-        LeanTween.alpha(FadeBlack, 0, 0.3f).setOnComplete(Finish);
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Flash();
+        }
     }
-    public void Flash()
-    {
-        if (BirdDeath.Instance.isDeath || isTransition) return;
-        Audio.Instance.PlayVoice("Bump");
-        FadeWhite.SetActive(true);
-        isTransition = true;
-        FadeWhite.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
-        LeanTween.alpha(FadeWhite, 1, 0.1f);
-        LeanTween.alpha(FadeWhite, 0, 0.3f).setOnComplete(Finish).setDelay(0.1f);
-    }
-    void Finish()
-    {
-        FadeBlack.SetActive(false);
-        FadeWhite.SetActive(false);
-        isTransition = false;
-    }
+*/
+    #endregion
 }
