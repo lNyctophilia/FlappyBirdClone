@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreMenu : MonoBehaviour
+public class HighScoreMenu : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private RectTransform _scorePanel;
@@ -20,6 +20,11 @@ public class ScoreMenu : MonoBehaviour
     private void Awake()
     {
         _closedYPosition = -Screen.height -140;
+        GameManager.OnGameStateChanged += GameStateHandler;
+    }
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= GameStateHandler;
     }
 
     public void ToggleScoreMenu()
@@ -40,6 +45,15 @@ public class ScoreMenu : MonoBehaviour
         }
     }
 
+    private void GameStateHandler(GameState _currentState)
+    {
+        if(_currentState != GameState.Starting) return;
+
+        CloseMenu();
+        _isAnimating = false;
+        _isMenuActive = false;
+    }
+
     private void OpenMenu()
     {
         _scorePanel.gameObject.SetActive(true);
@@ -50,6 +64,8 @@ public class ScoreMenu : MonoBehaviour
 
     private void CloseMenu()
     {
+        
+
         LeanTween.moveY(_scorePanel, _closedYPosition, _animationDuration)
             .setOnComplete(() => {
                 _scorePanel.gameObject.SetActive(false);
