@@ -10795,6 +10795,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1863240576}
   - component: {fileID: 1863240578}
+  - component: {fileID: 1863240579}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -10833,6 +10834,18 @@ MonoBehaviour:
   _soundOnSprite: {fileID: -1034664509, guid: c27f2f387658a4d46a8b3abdc2fe5740, type: 3}
   _soundOffSprite: {fileID: -460443156, guid: c27f2f387658a4d46a8b3abdc2fe5740, type: 3}
   _isMuted: 0
+--- !u!114 &1863240579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863240575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4456eef8d779db141b0e3f0c235841cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1893770381
 GameObject:
   m_ObjectHideFlags: 0
