@@ -33,7 +33,7 @@
 
 📱 Compatibility
 
-- Android Versions: Fully supported on Android 5.1 (Lollipop) to Android 13 (Tiramisu).
+- Android Versions: Fully supported on Android 6 (Marshmallow) to Android 15 (Vanilla Ice Cream).
 
 - Devices: Optimized for both phones and tablets.
 
@@ -43,7 +43,7 @@
 
 🛠️ Technical Details
 
-- Engine: Built with Unity 2022.3.13f1
+- Engine: Built with Unity 6000.0.36f1
 
 - Language: C#
 

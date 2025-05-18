@@ -23,12 +23,12 @@ public class BirdMovement : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (_rb.velocity.y > 0)
+        if (_rb.linearVelocity.y > 0)
         {
             LeanTween.cancel(gameObject);
             LeanTween.rotateZ(gameObject, 35, 0.1f);
         }
-        else if (_rb.velocity.y < 0)
+        else if (_rb.linearVelocity.y < 0)
         {
             LeanTween.cancel(gameObject);
             LeanTween.rotateZ(gameObject, -35, 0.2f);
@@ -38,7 +38,7 @@ public class BirdMovement : MonoBehaviour
     {
         if(Time.timeScale == 1)
         {
-            _rb.velocity = Vector2.up * _jumpForce;
+            _rb.linearVelocity = Vector2.up * _jumpForce;
             OnPlayerJumping?.Invoke();
         }
     }
