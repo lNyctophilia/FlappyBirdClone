@@ -50,9 +50,10 @@ public class ScoreManager : MonoBehaviour
         _currentScore++;
         _scoreText.text = _currentScore.ToString();
 
-        if (_currentScore > PlayerPrefs.GetInt(_highScorePrefsKey))
+        if (_currentScore > PlayerPrefs.GetInt(_highScorePrefsKey, 0))
         {
-            PlayerPrefs.SetInt(_highScorePrefsKey, _currentScore);
+            _highScore = _currentScore;
+            PlayerPrefs.SetInt(_highScorePrefsKey, _highScore);
             OnNewBestHighScored?.Invoke();
         }
 
