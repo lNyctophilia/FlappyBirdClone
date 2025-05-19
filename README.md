@@ -1,4 +1,4 @@
-# 🎮 Flappy Bird! Clone With Unity
+# 🎮 Flappy Bird Clone With Unity
 
 📸 Screenshots
 
