@@ -19,14 +19,29 @@ public class UIManager : MonoBehaviour
     {
         Instance = this;
         GameManager.OnGameStateChanged += ChangeCanvas;
-    }
-    private void Start()
-    {
-        StartCoroutine(OpenCanvas(0));
+        InitCanvas();
     }
     private void OnDestroy()
     {
         GameManager.OnGameStateChanged -= ChangeCanvas;
+    }
+
+    private void InitCanvas()
+    {
+        if (_canvas == null || _canvas.Length == 0) return;
+
+        for (int i = 0; i < _canvas.Length; i++)
+        {
+            if (_canvas[i] == null) continue;
+            bool isMenu = (i == 0);
+            _canvas[i].SetActive(isMenu);
+            if (_canvas[i].TryGetComponent<CanvasGroup>(out var group))
+            {
+                group.alpha = isMenu ? 1f : 0f;
+                group.blocksRaycasts = isMenu;
+                group.interactable = isMenu;
+            }
+        }
     }
 
 
