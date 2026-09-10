@@ -18,9 +18,11 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        OpenCanvas(0);
-
         GameManager.OnGameStateChanged += ChangeCanvas;
+    }
+    private void Start()
+    {
+        StartCoroutine(OpenCanvas(0));
     }
     private void OnDestroy()
     {
@@ -37,35 +39,45 @@ public class UIManager : MonoBehaviour
         if(_canvasIndex <= 1)
             yield return new WaitForSeconds(Transition.Instance.FadeDuration);
 
-        LeanTween.cancel(_canvas[_canvasIndex]);
-
-        _canvas[_canvasIndex].gameObject.SetActive(true);
-        _canvas[_canvasIndex].GetComponent<CanvasGroup>().alpha = 0;
-        
-        LeanTween.alphaCanvas(_canvas[_canvasIndex].GetComponent<CanvasGroup>(), 1, Transition.Instance.FadeDuration).setIgnoreTimeScale(true);;
-
         for(int i = 0; i < _canvas.Length; i++)
         {
-            if(i != _canvasIndex && i > 1)
+            if(i != _canvasIndex && _canvas[i] != null)
             {
                 int currentIndex = i;
+                if(_canvas[currentIndex].TryGetComponent<CanvasGroup>(out var closingGroup))
+                {
+                    closingGroup.blocksRaycasts = false;
+                    closingGroup.interactable = false;
+                }
 
-                LeanTween.alphaCanvas(_canvas[currentIndex].GetComponent<CanvasGroup>(), 0, Transition.Instance.FadeDuration / 2f).setOnComplete(() => { 
-                    _canvas[currentIndex].SetActive(false); 
-                }).setIgnoreTimeScale(true);
+                if(i > 1)
+                {
+                    LeanTween.alphaCanvas(_canvas[currentIndex].GetComponent<CanvasGroup>(), 0, Transition.Instance.FadeDuration / 2f).setOnComplete(() => { 
+                        _canvas[currentIndex].SetActive(false); 
+                    }).setIgnoreTimeScale(true);
+                }
+                else if(i == 1)
+                {
+                    LeanTween.alphaCanvas(_canvas[currentIndex].GetComponent<CanvasGroup>(), 0, Transition.Instance.FadeDuration * 1.4f).setOnComplete(() => { 
+                        _canvas[currentIndex].SetActive(false); 
+                    }).setIgnoreTimeScale(true);
+                }
+                else
+                {
+                    _canvas[i].SetActive(false); 
+                }
             }
-            else if(i != _canvasIndex && i == 1)
-            {
-                int currentIndex = i;
+        }
 
-                LeanTween.alphaCanvas(_canvas[currentIndex].GetComponent<CanvasGroup>(), 0, Transition.Instance.FadeDuration * 1.4f).setOnComplete(() => { 
-                    _canvas[currentIndex].SetActive(false); 
-                }).setIgnoreTimeScale(true);
-            }
-            else if(i != _canvasIndex && i < 1)
-            {
-                _canvas[i].SetActive(false); 
-            }
+        LeanTween.cancel(_canvas[_canvasIndex]);
+        _canvas[_canvasIndex].gameObject.SetActive(true);
+
+        if(_canvas[_canvasIndex].TryGetComponent<CanvasGroup>(out var openingGroup))
+        {
+            openingGroup.alpha = 0;
+            openingGroup.blocksRaycasts = true;
+            openingGroup.interactable = true;
+            LeanTween.alphaCanvas(openingGroup, 1, Transition.Instance.FadeDuration).setIgnoreTimeScale(true);
         }
     }
 }

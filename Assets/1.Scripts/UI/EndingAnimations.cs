@@ -54,6 +54,7 @@ public class EndingAnimations : MonoBehaviour
 
     [Header("Color Variables")]
     private Color _transparentColor = new Color(1, 1, 1, 0);
+    private bool _isSharing = false;
     
 
 
@@ -61,11 +62,17 @@ public class EndingAnimations : MonoBehaviour
     {
         GameManager.OnGameStateChanged += GameStateHandler;
         ScoreManager.OnNewBestHighScored += NewBestScore;
+
+        if (_shareButton != null)
+            _shareButton.onClick.AddListener(ShareScore);
     }
     private void OnDestroy()
     {
         GameManager.OnGameStateChanged -= GameStateHandler;
         ScoreManager.OnNewBestHighScored -= NewBestScore;
+
+        if (_shareButton != null)
+            _shareButton.onClick.RemoveListener(ShareScore);
     }
 
 
@@ -185,5 +192,36 @@ public class EndingAnimations : MonoBehaviour
     {
         float _totalAnimDuration = 0.6f;
         return _totalAnimDuration / Mathf.Max(score, 1);
+    }
+
+    public void ShareScore()
+    {
+        if (!_isSharing)
+            StartCoroutine(TakeScreenshotAndShare());
+    }
+
+    private IEnumerator TakeScreenshotAndShare()
+    {
+        _isSharing = true;
+        yield return new WaitForEndOfFrame();
+
+        Texture2D screenTexture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+        screenTexture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        screenTexture.Apply();
+
+        int score = ScoreManager.Instance != null ? ScoreManager.Instance.CurrentScore : 0;
+
+        new NativeShare()
+            .AddFile(screenTexture, "FlappyScore.png")
+            .SetSubject("Flappy Bird Score")
+            .SetText($"Flappy Bird'de {score} skor yaptım! Beni geçebilir misin?")
+            .SetTitle("Skorunu Paylaş")
+            .SetCallback((result, shareTarget) => _isSharing = false)
+            .Share();
+
+        Destroy(screenTexture);
+
+        yield return new WaitForSecondsRealtime(1f);
+        _isSharing = false;
     }
 }
